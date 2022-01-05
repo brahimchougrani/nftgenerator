@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% block stylesheet %}
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+<style>
+  ul#id_exclude li {
+    display: inline-block;
+    width: 49%;
+}
+
+ul#id_exclude {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+</style>
+{% endblock stylesheet %}
+  
+  {% block menu %}
+  <a href="{% url "collectibles:reset_image" pk=object.pk %}">reset many to many</a>
+
+  {% endblock menu %}
+    
+{% block content %}
+    <center><h3>Upload Images for {{ object.name }}</h3></center>
+  <div class="row text-center">
+        <div class="col-md-12 mb-3">
+        <form id="upload-form" action="{{form_url}}" class="dropzone">
+          <!-- this is were the previews should be shown. -->
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-3">
+              <div class="row border">
+                <div class="form-group col">
+                  <label for="exampleInputEmail1">{{ form.height.label }}</label>
+                  {% render_field form.height class="form-control" %}
+                </div>
+                <div class="form-group col">
+                  <label for="exampleInputEmail1">{{ form.width.label }}</label>
+                  {% render_field form.width class="form-control" %}
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Upload</button>
+            </div>
+            <div class="col-md-6">
+              <div class="previews"></div>
+              <div class="dz-message" data-dz-message> <img width="25" src="{% static "images/icons/folder.png" %}" alt=""><span>Upload your Image here</span></div>
+
+            </div>
+          </div>
+        </form>
+        
+        <div class="row mt-3"> 
+          {% for object in object.images_set.all %}
+            <div class="col-md-3 mb-2">
+              <div class="card">
+                <img class="card-img-top" src="{{ object.image.url }}" alt="Card image cap">
+                <div class="card-body">
+                  <p class="card-text">Position: {{ object.sort_order }}</p>
+                  <div class="row ">
+                    <button href="{% url "collectibles:update_image" pk=object.pk %}" data-toggle="modal"  data-bs-toggle="modal" data-bs-target="#exampleModal" class="modal-trigger-custom btn btn-primary modal-trigger-custom"  class="btn btn-danger  m-auto mb-2">Update Position</button>
+                    <button href="{% url "collectibles:delete_image" pk=object.pk %}" data-toggle="modal"  data-bs-toggle="modal" data-bs-target="#exampleModal" class="modal-trigger-custom btn btn-danger modal-trigger-custom"  class="btn btn-danger  m-auto mb-2">Delete Image</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+        {% endfor %}
+        </div>
+          
+    </div>
+
+  </div>
+
+  {% include "modal.html" with id_modal="exampleModal" %}
+  
+{% endblock %}
+
+{% block inline_javascript %}
+<script>
+  $("body").on("click","#toggle-check",function(){
+    $(':checkbox[name=exclude]').prop('checked', this.checked);
+  })  
+  Dropzone.options.uploadForm = { // The camelized version of the ID of the form element
+  // The configuration we've talked about above
+  paramName:"image",
+  autoProcessQueue: false,
+  uploadMultiple: false,
+  parallelUploads: 1000,
+  previewsContainer: ".previews",
+  // The setting up of the dropzone
+  success: function(file, response){
+
+    },
+  init: function() {
+    var myDropzone = this;
+    // First change the button to actually tell Dropzone to process the queue.
+    this.on("maxfilesexceeded", function(file) {
+            this.removeAllFiles();
+            this.addFile(file);
+      });
+    this.element.querySelector("button[type=submit]").addEventListener("click", function(e) {
+      // Make sure that the form isn't actually being sent.
+      e.preventDefault();
+        e.stopPropagation();
+        myDropzone.processQueue();
+      
+    });
+    
+    // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
+    // of the sending event because uploadMultiple is set to true.
+    this.on("sendingmultiple", function() {
+      // Gets triggered when the form is actually being sent.
+      // Hide the success button or the complete form.
+    });
+    this.on("successmultiple", function(files, response) {
+      // Gets triggered when the files have successfully been sent.
+      // Redirect user or notify of success.
+    });
+    this.on("errormultiple", function(files, response) {
+      // Gets triggered when there was an error sending the files.
+      // Maybe show form again, and notify user of error
+    });
+    
+  }
+ 
+}
+   $(document).ready(function(){
+    
+ 
+
+   })
+  </script>
+{% endblock inline_javascript %}
+  
+
+
+

@@ -1,0 +1,37 @@
+{% extends "modal_base.html" %}
+{% load widget_tweaks %}
+{% block action_url %}
+{{ form_url }}
+{% endblock %}
+ 
+ {% block title %}
+   Update Image {{ object.image.name }}{{ object.sort_order }}
+ {% endblock title %}
+   
+{% block content %}
+<div class="form-group text-center">
+  <img class="m-auto w-100" src="{{ object.image.url }}" alt="">
+</div>
+<div class="form-group">
+  <label for="nom" class="">Position</label>
+      {% render_field form.sort_order   class="form-control"%}
+</div>
+  <div class="form-group">
+    <label for="nom" class="col-sm-12  col-form-label-sm">Width</label>
+        {% render_field form.width   class="form-control"%}
+</div>
+<div class="form-group">
+  <label for="nom" class="col-sm-12  col-form-label-sm">Height</label>
+      {% render_field form.height   class="form-control"%}
+</div>
+<div class="form-group">
+  <label for="nom" class="col-sm-12  col-form-label-sm">Exclude</label>
+  <label for="">toggle check
+    <input type="checkbox" id="toggle-check">
+  </label>
+      {% render_field form.exclude   class="form-control"%}
+</div>
+{% endblock %}
+{% block script %}
+
+{% endblock %}

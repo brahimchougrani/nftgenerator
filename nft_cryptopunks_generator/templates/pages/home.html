@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% block content %}
+    <div class="text-center mb-5">
+     <div id="mydiv">
+     </div>
+      <div class="clear"></div>
+      <button id="download" class="btn btn-success d-inline-block">Download all images</button>
+    </div>
+{% endblock %}
+{% block inline_javascript %}
+  <script src="https://unpkg.com/merge-images"></script>
+
+  <script>
+    var head = [{"url":"{% static "images/human/face-1.png" %}","height":20,"width":20,"x":50,"y":90},
+                {"url":"{% static "images/human/face-2.png" %}","height":20,"width":20,"x":50,"y":90},
+                {"url":"{% static "images/human/face-3.png" %}","height":20,"width":20,"x":50,"y":90}
+    ]
+
+    var ear =[{"url":"{% static "images/human/body-1.png" %}","height":300,"width":145,"x":50,"y":143},
+                {"url":"{% static "images/human/body-2.png" %}","height":300,"width":145,"x":50,"y":143},
+                {"url":"{% static "images/human/body-3.png" %}","height":300,"width":145,"x":50,"y":143}
+    ]
+    var eyes = [{"url":"{% static "images/human/walk-1.png" %}","height":300,"width":220,"x":50,"y":250},
+                {"url":"{% static "images/human/walk-2.png" %}","height":300,"width":220,"x":50,"y":250},
+                {"url":"{% static "images/human/walk-3.png" %}","height":300,"width":220,"x":50,"y":250}
+    ]
+    var mouth = [{"url":"{% static "images/robot/mouth-1.png" %}","height":300,"width":180,"x":50,"y":300},
+                {"url":"{% static "images/robot/mouth-2.png" %}","height":300,"width":180,"x":50,"y":300},
+                {"url":"{% static "images/robot/mouth-3.png" %}","height":300,"width":180,"x":50,"y":300}
+    ]
+    let robots = [head,eyes,ear,]
+    let counter = 0;
+    let newArr = robots[0]
+    let reservArr = []
+    let csutomArr = []
+    while (counter < robots.length-1){
+      for (let i = 0; i < newArr.length; i++) {
+        for (let j = 0; j < robots[counter+1].length; j++) {
+          if(Array.isArray(newArr[i])){
+            csutomArr = [...newArr[i]] ;
+            csutomArr.push(robots[counter+1][j])
+            reservArr.push(csutomArr)
+          }else{
+            reservArr.push( [newArr[i],robots[counter+1][j]])
+          }
+        }
+      }
+      newArr = reservArr;
+      reservArr = [];
+      counter++;
+    }
+    let i = 0;
+    for (i = 0; i < newArr.length; i++) {
+      var img = $("#mydiv").append($('<img src="" style="background: #d6e9c6; margin: 20px"/>'));
+      let imgElam = img.find("img:last").last();
+      let mergeArr = [];
+      for (let j = 0; j < newArr[i].length; j++) {
+        let tempElem = newArr[i][j];
+        mergeArr.push({src : newArr[i][j].url, x: (500-tempElem.width)/2 , y: tempElem.y});
+      }
+      mergeImages(mergeArr,{width: 500, height: 500,quality:1}).then(b64 => imgElam.attr("src",b64))
+    }
+    $("#download").click(function (){
+      DownalodImage();
+    })
+    function DownalodImage(){
+      var images = document.getElementsByTagName('img');
+      var srcList = [];
+      var i = 0;
+
+      setInterval(function(){
+          if(images.length > i){
+              srcList.push(images[i].src);
+              var link = document.createElement("a");
+              link.id=i;
+              link.download = images[i].src;
+              link.href = images[i].src;
+              link.click();
+              i++;
+          }
+      },1500);
+    }
+  </script>
+{% endblock %}

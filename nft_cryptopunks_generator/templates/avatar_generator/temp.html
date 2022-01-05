@@ -1,0 +1,299 @@
+{% extends "dashboard/base2.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block title %}
+Créer un dossier
+{% endblock %}
+{% block stylesheet %}
+      <link href="{% static "plugins_2/select2/select2.min.css" %}" rel="stylesheet" type="text/css" />
+      <link href="{% static "plugins_2/huebee/huebee.min.css" %}" rel="stylesheet" type="text/css" />
+      <link href="{% static "plugins_2/timepicker/bootstrap-material-datetimepicker.css" %}" rel="stylesheet">
+      <link href="{% static "plugins_2/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" %}" rel="stylesheet" />
+      <link href="{% static "plugins_2/dropify/css/dropify.min.css" %}" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" href="{% static "plugins/editors/quill/quill.snow.css" %}">
+
+{% endblock %}
+{% block active_document %}
+data-active="true"
+{% endblock %}
+
+    
+{% block content %}
+
+   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                   <div class="doc-container">
+
+                            <form  action="." method="POST" class="row">
+                              {% csrf_token %}
+                                <div class="col-xl-9">
+
+                                    <div class="invoice-content">
+
+                                        <div class="invoice-detail-body">
+                                            <div class="invoice-detail-header">
+
+                                                <div class="row justify-content-between">
+                                                    <div class="col-xl-12 invoice-address-company">
+                                                        <div class="card">
+                                                            <div class="card-header">
+                                                                <h4 class="card-title">Information Initial</h4>
+                                                            </div><!--end card-header-->
+                                                            <div class="card-body bootstrap-select-1">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <label class="mb-2">Titre</label>
+                                                                        {% render_field form.titre placeholder="Dossier juridique"  class="form-control"%}
+                                                                    </div><!-- end col -->                                     
+                                                                    <div class="col-md-6">
+                                                                        <label class="mb-2">Titre AR</label>
+                                                                        {% render_field form.titre_ar placeholder="Dossier juridique"  class="form-control"%}
+                                                                    </div>
+                                                                    <div class="col-md-6 mt-3">
+                                                                        <label class="mb-2">Catégorie</label>
+                                                                        {% render_field form.categorie class="select2 form-control custom-select" %}
+                                                                    </div><!-- end col -->                                     
+                                                                    <div class="col-md-6 mt-3">
+                                                                        <label class="mb-2">Type de dossier</label>
+                                                                        {% render_field form.type_de_dossier class="select2 form-control custom-select" %}
+                                                                    </div>
+                                                                    <div class="col-md-12 mt-3">
+                                                                        <label class="mb-2">Frais du dossier</label>
+                                                                        {% render_field form.frais_de_dossier class="select2 form-control custom-select" %}
+                                                                    </div> <!-- end col -->                                                
+                                                                </div><!-- end row --> 
+                                                            </div><!-- end card-body --> 
+                                                        </div> 
+                                                    </div>
+                                                    <div class="col-xl-12 invoice-address-company">
+                                                        <div class="card">
+                                                            <div class="card-header">
+                                                                <h4 class="card-title">Information Secondaire</h4>
+                                                            </div><!--end card-header-->
+                                                            <div class="card-body bootstrap-select-1">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <label class="mb-2">Date d'Expiration</label>
+                                                                        {% render_field form.dete_dexperiation value="2020-09-04" type="date" class="form-control" id="mdate" %}
+                                                                    </div><!-- end col -->                                     
+                                                                    <div class="col-md-6">
+                                                                        <label class="mb-2">Site web</label>
+                                                                        {% render_field form.site_web class="form-control " %}
+                                                                    </div>
+                                                                    <div class="col-md-6 mt-3">
+                                                                        <label class="mb-2">Facebook</label>
+                                                                        {% render_field form.facebook class="form-control " %}
+                                                                    </div>
+                                                                    <div class="col-md-6 mt-3">
+                                                                        <label class="mb-2">Instagram</label>
+                                                                        {% render_field form.instagram class="form-control " %}
+                                                                    </div>
+                                                                    <div class="col-md-6 mt-3">
+                                                                        <label class="mb-2">Youtube</label>
+                                                                        {% render_field form.youtube class="form-control " %}
+                                                                    </div>
+                                                                    <div class="col-md-6 mt-3">
+                                                                        <label class="mb-2">Linkedin</label>
+                                                                        {% render_field form.linkedin class="form-control " %}
+                                                                    </div>
+                                                                    <!-- end col -->                                     
+                                                                     <!-- end col -->                                                
+                                                                </div><!-- end row --> 
+                                                            </div><!-- end card-body --> 
+                                                        </div> 
+                                                    </div>  
+                                                    <div class="col-xl-12 invoice-address-company">
+                                                        <div class="card">
+                                                            <div class="card-header">
+                                                                <h4 class="card-title">Description et observation</h4>
+                                                            </div><!--end card-header-->
+                                                            <div class="card-body bootstrap-select-1">
+                                                                <div class="row">
+                                                                    <div id="basic" class="row layout-spacing layout-top-spacing pb-0">
+                                                                        <div class="col-lg-6 mb-3">
+                                                                            <div class="statbox widget box box-shadow">
+                                                                                <label class="mb-2">Description </label>                                                                               
+                                                                                <div class="widget-content widget-content-area">
+                                                                                    <div id="editor-container" class="mt-0">
+                                                                                       {{ object.description|safe }}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6 mb-3">
+                                                                            <div class="statbox widget box box-shadow">
+                                                                                <label class="mb-2">Description Arabe</label>                                                                               
+                                                                                <div class="widget-content widget-content-area">
+                                                                                    <div id="editor-container_ar" class="mt-0">
+                                                                                       {{ object.description_ar|safe }}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div id="basic_2" class="row layout-spacing layout-top-spacing pt-0">
+                                                                        <div class="col-lg-6 mb-3">
+                                                                            <div class="statbox widget box box-shadow">
+                                                                                <label class="mb-2">Observation </label>                                                                               
+                                                                                <div class="widget-content widget-content-area">
+                                                                                    <div id="editor-container-quill" class="mt-0">
+                                                                                       {{ object.observation|safe }}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6 mb-3">
+                                                                            <div class="statbox widget box box-shadow">
+                                                                                <label class="mb-2">Observation Arabe</label>                                                                               
+                                                                                <div class="widget-content widget-content-area">
+                                                                                    <div id="editor-container-quill_ar" class="mt-0">
+                                                                                       {{ object.observation_ar|safe }}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>                                               
+                                                                </div><!-- end row --> 
+                                                            </div><!-- end card-body --> 
+                                                        </div> 
+                                                    </div>                
+                                                </div>
+
+                                            </div>
+                                            
+                                             <textarea name="description" cols="40" rows="10" style="height: 88px;" class="form-control d-none"  id="id_description"></textarea>
+                                             <textarea name="description_ar" cols="40" rows="10" style="height: 88px;" class="form-control d-none"  id="id_description_ar"></textarea>
+                                             <textarea name="observation" cols="40" rows="10"  style="height: 88px;" class="form-control d-none" id="id_observation"></textarea>
+                                             <textarea name="observation_ar" cols="40" rows="10"  style="height: 88px;" class="form-control d-none" id="id_observation_ar"></textarea>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-xl-3">
+
+                                    <div class="invoice-actions">
+
+                                        <div class="invoice-action-currency">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h4 class="card-title">Visibilité</h4>
+                                                    <p class="text-muted mb-0">
+                                                        Controler la visibilité du dossier 
+                                                    </p> 
+                                                </div><!--end card-header-->
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="form-check form-switch form-switch-success">
+                                                            {% render_field form.dossier_confirmee  class="form-check-input" id="customSwitchSuccess" %}
+                                                            <label class="form-check-label" for="customSwitchSuccess">Dossier Confirmée</label>
+                                                        </div>
+                                                        <div class="form-check form-switch form-switch-success">
+                                                            {% render_field form.deossier_publiee  class="form-check-input" id="customSwitchSuccess" %}
+                                                            <label class="form-check-label" for="customSwitchSuccess">Publiée</label>
+                                                        </div><!--end col-->
+                                                    </div><!--end row-->
+                                                </div><!--end card-body-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="invoice-actions-btn">
+                                        <div class="invoice-action-btn">
+                                           <label for="fichier">Piéce Jointe</label>
+                                              {% for foo in object.attachment_set.all %}
+                                                    <div class="card mb-3">                               
+                                                        <div class="card-body">                                                     
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <div class="media">
+                                                                        <img src="{% static "images/pdf.svg" %}" alt="user" class="thumb-md align-self-center">
+                                                                        <div class="media-body ms-3 align-self-center">
+                                                                            <h5 class="mt-0 mb-1">{{ foo.nom }}</h5> 
+                                                                            <p class="mb-0 text-muted"><a target="_blank" href="{{ foo.fichier.url }}">{{ foo.fichier.url|truncatechars:15 }}</a></p>
+                                                                        </div>
+                                                                    </div><!--end media--> 
+                                                                </div><!--end col-->
+                                                                <div class="col-auto align-self-center">
+                                                                    <ul class="list-inline mb-0">
+                                                                        <li class="list-inline-item">
+                                                                            <a href="{% url "dashboard:update_attachment" pk=foo.pk %}" data-toggle="modal"  data-bs-toggle="modal" data-bs-target="#exampleModal"  class="modal-trigger-custom me-1 contact-icon"><i class="fas text-primary fa-pen"></i></a>
+                                                                            <a href="{% url "dashboard:delete_attachment" pk=foo.pk %}" data-toggle="modal"  data-bs-toggle="modal" data-bs-target="#exampleModal" class=" modal-trigger-custom contact-icon "><i class="far text-danger far fa-trash-alt"></i></a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div><!--end col-->
+                                                            </div><!--end row-->
+                                                        </div><!--end card-body-->                                                                     
+                                                    </div>
+                                              {% endfor %}
+                                        </div>
+
+                                    </div>
+
+                                    <div class="invoice-actions-btn">
+                                        <div class="invoice-action-btn">
+
+                                            <div class="row">
+                                                {% if object%}
+                                                    <div class="col-xl-12 col-md-12 ">
+                                                        <a href="{% url "dashboard:attachment_create" pk=object.pk %}" data-toggle="modal"  data-bs-toggle="modal" data-bs-target="#exampleModal" class="modal-trigger-custom btn btn-md btn-soft-primary modal-trigger-custom w-100" >
+                                                            <i class="fa fa-pen"></i>
+                                                            Ajouter un fichier
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-xl-12 col-md-12 mb-3 mt-3">
+                                                        <a href="{% url "dashboard:dossier_delete" pk=object.pk %}" data-toggle="modal"  data-bs-toggle="modal" data-bs-target="#exampleModal" class="modal-trigger-custom btn btn-md btn-soft-danger modal-trigger-custom w-100" >
+                                                            <i class="fa fa-trash-alt"></i>
+                                                            Supprimer le dossier
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-xl-12 col-md-12">
+                                                        <button type="submit" class="btn btn-primary btn-send w-100 d-block">Mettre à jour</button>
+                                                    </div>
+                                                 {% else %}
+                                                      <div class="col-xl-12 col-md-12">
+                                                        <button type="submit" class="btn btn-primary btn-send w-100 d-block">Créer</button>
+                                                      </div>
+                                                 {% endif %}
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+
+{% endblock %}
+
+{% block freecontent %}
+  {% include "dashboard/modal.html" with id_modal="exampleModal" %}
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static "plugins_2/select2/select2.min.js" %}"></script>
+<script src="{% static "plugins_2/huebee/huebee.pkgd.min.js" %}"></script>
+<script src="{% static "plugins_2/timepicker/bootstrap-material-datetimepicker.js" %}"></script>
+<script src="{% static "plugins_2/bootstrap-maxlength/bootstrap-maxlength.min.js" %}"></script>
+<script src="{% static "plugins_2/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js" %}"></script>
+<script src="{% static "plugins_2/dropify/js/dropify.min.js" %}"></script>
+<script src="{% static "assets_2/pages/jquery.forms-advanced.js" %}"></script>
+<script src="{% static "plugins/highlight/highlight.pack.js" %}"></script>
+<script src="{% static "plugins/editors/quill/quill.js" %}"></script>
+<script src="{% static "plugins/editors/quill/custom-quill.js" %}"></script>
+<script>
+  $("form").on("submit",function(){
+    $("#id_description").val($("#editor-container").html());
+    $("#id_description_ar").val($("#editor-container_ar").html());
+    $("#id_observation").val($("#editor-container-quill").html());
+    $("#id_observation_ar").val($("#editor-container-quill_ar").html());
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block stylesheet %}
+    <style>
+       #collectable-template{
+            cursor: crosshair;
+        }
+        .indicator{
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: red;
+            position: absolute;
+        }
+        #image-container{
+            position: relative;
+            display: inline-block;
+        }        
+    </style>
+{% endblock stylesheet %}
+    
+    {% block menu %}
+    <a type="button" href="{% url "collectibles:update_settings" pk=object.pk %}" data-toggle="modal"  data-bs-toggle="modal" data-bs-target="#exampleModal" class="modal-trigger-custom btn  modal-trigger-custom" >
+      Edit Settings
+  </a> 
+  <div class="m-3"> 
+    <a type="button" href="{% url "collectibles:generate_part" pk=object.pk %}">
+      Result
+    </a>
+  </div>
+  <div class="m-3">
+    <a type="button" href="{% url "collectibles:generate_nft" pk=object.pk %}">
+      generate collection
+    </a>
+  </div>
+  <div class="m-3">
+    <a type="button" href="{% url "collectibles:delete_partarr" pk=object.pk %}">
+      delete collection generated
+    </a>
+  </div>
+  
+    {% endblock menu %}
+        
+{% block content %}
+    <h1>{{ object.title }}</h1>
+    <div class="sections">
+      {% for object in object_list %}
+            <a  href="{% url "collectibles:upload_image" pk=object.pk %}"  >
+              {{ object.name}}
+            </a>
+      {% endfor %}
+    </div>
+    <div id="image-container">
+        <img id="collectable-template" width="{{ object.width }}" height="{{ object.height }}" src="{{ object.file.url }}" alt="">
+        {% for object in object_list %}
+            <div  href="{% url "collectibles:delete_section" pk=object.pk %}" data-toggle="modal"  data-bs-toggle="modal" data-bs-target="#exampleModal" class="modal-trigger-custom indicator" style="left:{{ object.position_x }}px; top: {{ object.position_y}}px"></div>
+        {% endfor %}
+    </div>
+
+{% endblock content %}
+
+
+{% block modal %}
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Add Section</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form action="." method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-12">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">{{ form.name.label }}</label>
+                        {% render_field form.name class="form-control" %}
+                      </div>
+                      <div class="row">
+                        <div class="form-group col">
+                          <label for="exampleInputEmail1">{{ form.position_x.label }}</label>
+                          {% render_field form.position_x class="form-control" %}
+                        </div>
+                        <div class="form-group col">
+                          <label for="exampleInputEmail1">{{ form.position_y.label }}</label>
+                          {% render_field form.position_y class="form-control" %}
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">{{ form.sort_order.label }}</label>
+                        {% render_field form.sort_order class="form-control" %}
+                      </div>
+                    </div>
+                  </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  {% include "modal.html" with id_modal="exampleModal" %}
+
+{% endblock modal %}
+    {% block inline_javascript %}
+        <script>
+            let x = 0;
+            let y = 0;
+            $("#collectable-template").on('click', function( e ) {
+                let $this = $(this);
+                var rect = e.target.getBoundingClientRect();
+                x = e.clientX - rect.left; //x position within the element.
+                y = e.clientY - rect.top;
+                $("#id_position_x").val(x);
+                $("#id_position_y").val(y);
+                $('#exampleModalCenter').modal('show')
+                $("#image-container").append("<div style='top:"+y+"px;left:"+x+"px' class='indicator'></div>")
+            })
+            $('#exampleModalCenter').on('hidden.bs.modal', function (e) {
+                $("body").find(".indicator").last().remove();
+            })
+        </script>  
+    {% endblock inline_javascript %}
+        

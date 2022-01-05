@@ -1,0 +1,28 @@
+{% extends "modal_base.html" %}
+{% load widget_tweaks %}
+{% block action_url %}
+{{ form_url }}
+{% endblock %}
+ 
+ {% block title %}
+   Section
+ {% endblock title %}
+   
+{% block content %}
+<div class="form-group">
+  <label for="nom" class="">Modifier les parameter de votre template</label>
+      {% render_field form.title   class="form-control"%}
+</div>
+  <div class="form-group">
+    <label for="nom" class="col-sm-12  col-form-label-sm">Width</label>
+        {% render_field form.width   class="form-control"%}
+</div>
+<div class="form-group">
+      <label for="nom" class="col-sm-12  col-form-label-sm">Height</label>
+          {% render_field form.height   class="form-control"%}
+</div>
+    
+{% endblock %}
+{% block script %}
+
+{% endblock %}

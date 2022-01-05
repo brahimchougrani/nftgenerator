@@ -1,0 +1,18 @@
+{% extends "modal_base.html" %}
+{% load widget_tweaks %}
+{% block action_url %}
+{{ form_url }}
+{% endblock %}
+ 
+ {% block title %}
+   Are you sure you want to delete this image
+ {% endblock title %}
+   
+{% block content %}
+<div class="form-group text-center">
+    <img class="m-auto w-100" src="{{ object.image.url }}" alt="">
+</div>
+{% endblock %}
+{% block script %}
+
+{% endblock %}

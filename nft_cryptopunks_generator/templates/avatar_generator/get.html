@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% block content %}
+<h1>result : {{ count }}</h1>
+
+  
+
+    <div class="text-center mb-5">
+     <div class="row" id="mydiv">
+     </div>
+      
+      <button id="download" class="btn btn-success d-inline-block">Download all images</button>
+    </div>
+    {% if object_list.has_other_pages %}
+    <ul class="pagination">
+      {% if object_list.has_previous %}
+        <li><a href="?page={{ object_list.previous_page_number }}">&laquo;</a></li>
+      {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+      {% endif %}
+      {% for i in object_list.paginator.page_range %}
+        {% if object_list.number == i %}
+          <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+          <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if object_list.has_next %}
+        <li><a href="?page={{ object_list.next_page_number }}">&raquo;</a></li>
+      {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+      {% endif %}
+    </ul>
+    <a href="" id="dow" download>download</a>
+  {% endif %}
+
+
+     
+        
+{% endblock %}
+{% block inline_javascript %}
+  <script src="https://unpkg.com/merge-images"></script>
+
+  <script>
+    let myarr = []  
+    
+    let robots = {{ object_list.0.arr|safe }};
+    let counter = 0;
+    let newArr = [];
+    let reservArr = []
+    let csutomArr = []
+    while (counter < robots.length-1){
+      for (let i = 0; i < newArr.length; i++) {
+        for (let j = 0; j < robots[counter+1].length; j++) {
+          if(Array.isArray(newArr[i])){
+            csutomArr = [...newArr[i]] ;
+            csutomArr.push(robots[counter+1][j])
+            reservArr.push(csutomArr)
+          }else{
+            reservArr.push( [newArr[i],robots[counter+1][j]])
+          }
+        }
+      }
+      newArr = reservArr;
+      reservArr = [];
+      counter++;
+    }
+    {% for obj in object_list %}
+      newArr.push({{ obj.arr|safe }});
+    {% endfor %}
+    console.log(newArr)
+    let i = 0;
+    for (i = 0; i < newArr.length; i++) {
+      var img = $("#mydiv").append($('<div class="col-md-6" data="'+JSON.stringify(newArr[i])+'"><img src="" style="margin: 20px;width:500px;height:500px"/></div>'));
+      let imgElam = img.find("img:last").last();
+      let mergeArr = [];
+      mergeImages(newArr[i],{width: 2048, height: 2048,quality:1}).then(b64 => imgElam.attr("src",b64))
+    }
+    
+    $("#download").click(function(){
+      let src ;
+      $("img").each(function(){
+        src = $(this).attr("src")
+        $(this).parent().append("<a href='"+src+"' download>download</a>")
+      })
+      $("#dow").attr("href",src)
+      // DownalodImage();
+    })
+    function DownalodImage(){
+      var images = document.getElementsByTagName('img');
+      var srcList = [];
+      var i = 0;
+
+      if(images.length > i){
+              srcList.push(images[i].src);
+              var link = document.createElement("a");
+              link.id=i;
+              link.download = images[i].src;
+              link.href = images[i].src;
+              link.click();
+              i++;
+          }
+    }
+  </script>
+{% endblock inline_javascript %}

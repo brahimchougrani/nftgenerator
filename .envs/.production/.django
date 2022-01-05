@@ -1,0 +1,52 @@
+# General
+# ------------------------------------------------------------------------------
+# DJANGO_READ_DOT_ENV_FILE=True
+DJANGO_SETTINGS_MODULE=config.settings.production
+DJANGO_SECRET_KEY=wKATL00mtmgYubBkaB9WOht2ZCGN1sayvE6POOAyeZI1HKGl6rZ40JRTTbl3p5qH
+DJANGO_ADMIN_URL=SVG08wdz03ux7uggweUF9HUVfHAsFiZY/
+DJANGO_ALLOWED_HOSTS=.ntf-cryptopunks-generator.com
+
+# Security
+# ------------------------------------------------------------------------------
+# TIP: better off using DNS, however, redirect is OK too
+DJANGO_SECURE_SSL_REDIRECT=False
+
+# Email
+# ------------------------------------------------------------------------------
+DJANGO_SERVER_EMAIL=contact@fridoc.com
+
+SENDINBLUE_API_KEY="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"
+
+SENDGRID_GENERATE_MESSAGE_ID=True
+SENDGRID_MERGE_FIELD_FORMAT=None
+
+
+# AWS
+# ------------------------------------------------------------------------------
+DJANGO_AWS_ACCESS_KEY_ID="AKIA3SDLH7XF4Y2UYV5U"
+DJANGO_AWS_SECRET_ACCESS_KEY="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"
+DJANGO_AWS_STORAGE_BUCKET_NAME="fristatic"
+
+# ------------------------------------------------------------------------------
+DJANGO_ACCOUNT_ALLOW_REGISTRATION=True
+
+# django-allauth
+# ------------------------------------------------------------------------------
+DJANGO_ACCOUNT_ALLOW_REGISTRATION=True
+
+# Gunicorn
+# ------------------------------------------------------------------------------
+WEB_CONCURRENCY=4
+
+
+# Redis
+# ------------------------------------------------------------------------------
+REDIS_URL=redis://redis:6379/0
+
+# Celery
+# ------------------------------------------------------------------------------
+
+# Flower
+CELERY_FLOWER_USER=debug
+CELERY_FLOWER_PASSWORD=debug
+

@@ -31,7 +31,7 @@ certificatesResolvers:
 http:
   routers:
     web-secure-router:
-      rule: "Host(`ntf-cryptopunks-generator.com`) || Host(`www.ntf-cryptopunks-generator.com`)"
+      rule: "Host(`gen.fridoc.com`) || Host(`www.gen.fridoc.com`)"
       entryPoints:
         - web-secure
       middlewares:
@@ -42,7 +42,7 @@ http:
         certResolver: letsencrypt
 
     flower-secure-router:
-      rule: "Host(`ntf-cryptopunks-generator.com`)"
+      rule: "Host(`gen.fridoc.com`)"
       entryPoints:
         - flower
       service: flower

@@ -4,7 +4,7 @@
 DJANGO_SETTINGS_MODULE=config.settings.production
 DJANGO_SECRET_KEY=wKATL00mtmgYubBkaB9WOht2ZCGN1sayvE6POOAyeZI1HKGl6rZ40JRTTbl3p5qH
 DJANGO_ADMIN_URL=SVG08wdz03ux7uggweUF9HUVfHAsFiZY/
-DJANGO_ALLOWED_HOSTS=.ntf-cryptopunks-generator.com
+DJANGO_ALLOWED_HOSTS=gen.fridoc.com
 
 # Security
 # ------------------------------------------------------------------------------
